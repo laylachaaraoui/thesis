@@ -206,8 +206,8 @@ vegas_filtered2 <- vegas_data_small %>%
       regex(str_c(vegas_terms, collapse = "|"), ignore_case = TRUE)
     )
   )
-nrow(vegas_data_small)      # total tweets in the 30-day period
-nrow(vegas_filtered2)       # tweets relevant to the event
+nrow(vegas_data_small)
+nrow(vegas_filtered2) 
 View(vegas_filtered2)
 write.csv(vegas_filtered2, "vegas_filtered.csv", row.names = FALSE)
 
