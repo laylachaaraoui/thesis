@@ -145,3 +145,56 @@ if (file.exists(output_file)) {
 } else {
   cat("Error: File not found. Check path.\n")
 }
+
+install.packages(c("httr", "jsonlite", "purrr", "dplyr"))
+library(httr)
+library(jsonlite)
+library(purrr)
+library(dplyr)
+owner <- "alexlitel"
+repo <- "congresstweets"
+path <- "data"
+branch <- "master"
+url <- paste0(
+  "https://api.github.com/repos/",
+  owner, "/", repo, "/contents/", path, "?ref=", branch
+)
+files <- fromJSON(content(GET(url), as = "text"))
+vegas_files <- files %>%
+  filter(name >= "2017-10-01.json" & name <= "2017-10-31.json")
+vegas_data_list <- map(vegas_files$download_url, ~fromJSON(.x))
+names(vegas_data_list) <- vegas_files$name
+vegas_data <- bind_rows(vegas_data_list)
+head(vegas_data)
+nrow(vegas_data)
+unique(substr(vegas_data$created_at, 1, 10))
+vegas_small <- vegas_data[, c(
+  "created_at",
+  "screen_name",
+  "text",
+  "retweet_count",
+  "favorite_count"
+)]
+write.csv(vegas_small, "vegas_data_small.csv", row.names = FALSE)
+
+library(httr)
+library(jsonlite)
+library(dplyr)
+library(purrr)
+owner <- "alexlitel"
+repo <- "congresstweets"
+path <- "data"
+branch <- "master"
+url <- paste0(
+  "https://api.github.com/repos/",
+  owner, "/", repo, "/contents/", path, "?ref=", branch
+)
+files <- fromJSON(content(GET(url), as = "text"))
+parkland_files <- files %>%
+  filter(name >= "2018-02-14.json" & name <= "2018-03-14.json")
+parkland_data <- map_df(parkland_files$download_url, fromJSON)
+write.csv(
+  parkland_data,
+  file = "parkland_data.csv",
+  row.names = FALSE
+)
