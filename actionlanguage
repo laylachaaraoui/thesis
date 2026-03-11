@@ -205,3 +205,31 @@ ggplot(action_summary_by_year,
     color = "Party"
   ) +
   theme_minimal(base_size = 14)
+
+action_summary_by_year <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat","Republican")) %>%
+  group_by(year, party_clean) %>%
+  summarise(
+    action_rate = mean(action_language, na.rm = TRUE),
+    n = n(),
+    .groups = "drop"
+  )
+
+action_summary_by_year
+
+ggplot(action_summary_by_year,
+       aes(x = factor(year), y = action_rate, color = party_clean, group = party_clean)) +
+  geom_line(size = 1.3) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c(
+    "Democrat" = "#a6cee3",
+    "Republican" = "#fb9a99"
+  )) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(
+    title = "Action-Oriented Language in Congressional Tweets Over Time",
+    x = "Year",
+    y = "Proportion of Tweets Using Action Language",
+    color = "Party"
+  ) +
+  theme_minimal(base_size = 14)
