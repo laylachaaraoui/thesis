@@ -164,4 +164,999 @@ alltweets_with_party <- alltweets_with_party %>%
   select(-full_name_new, -party_new)
 sum(is.na(alltweets_with_party_filled$party))
 
+alltweets_na_party <- alltweets_with_party_filled[is.na(alltweets_with_party_filled$party), ]
+head(alltweets_na_party)
 
+library(dplyr)
+new_data <- read.csv(text = "
+Screen.Name,Full.Name,Party
+GovMalloyOffice,Dannel Malloy,Democrat
+GovernorVA,Terry McAuliffe,Democrat
+SenDanSullivan,Dan Sullivan,Republican
+RepKevinBrady,Kevin Brady,Republican
+MacTXPress,Mac Thornberry,Republican
+RepGutierrez,Luis Gutiérrez,Democrat
+EricGreitens,Eric Greitens,Republican
+senorrinhatch,Orrin Hatch,Republican
+RepDWStweets,Debbie Wasserman Schultz,Democrat
+GovHawaii,David Ige,Democrat
+RepLarryBucshon,Larry Bucshon,Republican
+NydiaVelazquez,Nydia Velázquez,Democrat
+teammoulton,Seth Moulton,Democrat
+RepJohnConyers,John Conyers,Democrat
+GovRauner,Bruce Rauner,Republican
+", stringsAsFactors = FALSE)
+new_data <- new_data %>% rename(screen_name = Screen.Name, party_new = Party)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_data %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+head(alltweets_with_party_filled)
+
+library(dplyr)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_2 <- read.csv(text = "
+Screen.Name,Full.Name,Party
+RepJohnConyers,John Conyers,Democrat
+BillHaslam,Bill Haslam,Republican
+repbenraylujan,Ben Ray Luján,Democrat
+cathymcmorris,Cathy McMorris Rodgers,Republican
+GovMalloyOffice,Dannel Malloy,Democrat
+RepDWStweets,Debbie Wasserman Schultz,Democrat
+ChuckGrassley,Chuck Grassley,Republican
+GovHawaii,David Ige,Democrat
+RepKevinBrady,Kevin Brady,Republican
+RepEBJ,Eddie Bernice Johnson,Democrat
+RepSteveChabot,Steve Chabot,Republican
+teammoulton,Seth Moulton,Democrat
+ButchOtter,Butch Otter,Republican
+RepDonaldPayne,Donald Payne Jr.,Democrat
+", stringsAsFactors = FALSE)
+new_data_2 <- new_data_2 %>% rename(screen_name = Screen.Name, party_new = Party)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_data_2 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new) 
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_3 <- read.csv(text = "
+Screen.Name,Full.Name,Party
+RepJohnConyers,John Conyers,Democrat
+GovRauner,Bruce Rauner,Republican
+BillHaslam,Bill Haslam,Republican
+repbenraylujan,Ben Ray Luján,Democrat
+cathymcmorris,Cathy McMorris Rodgers,Republican
+GovMalloyOffice,Dannel Malloy,Democrat
+RepDWStweets,Debbie Wasserman Schultz,Democrat
+ChuckGrassley,Chuck Grassley,Republican
+GovHawaii,David Ige,Democrat
+RepKevinBrady,Kevin Brady,Republican
+RepEBJ,Eddie Bernice Johnson,Democrat
+RepSteveChabot,Steve Chabot,Republican
+teammoulton,Seth Moulton,Democrat
+ButchOtter,Butch Otter,Republican
+RepDonaldPayne,Donald Payne Jr.,Democrat
+EricGreitens,Eric Greitens,Republican
+MacTXPress,Mac Thornberry,Republican
+senorrinhatch,Orrin Hatch,Republican
+RepLarryBucshon,Larry Bucshon,Republican
+Governor_LePage,Paul LePage,Republican
+NydiaVelazquez,Nydia Velázquez,Democrat
+", stringsAsFactors = FALSE)
+new_data_3 <- new_data_3 %>% rename(screen_name = Screen.Name, party_new = Party)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_data_3 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+head(alltweets_with_party_filled)
+
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_4 <- read.csv(text = "
+Screen.Name,Full.Name,Party
+RepEBJ,Eddie Bernice Johnson,Democrat
+RepDWStweets,Debbie Wasserman Schultz,Democrat
+EricGreitens,Eric Greitens,Republican
+teammoulton,Seth Moulton,Democrat
+cathymcmorris,Cathy McMorris Rodgers,Republican
+RepGutierrez,Luis Gutiérrez,Democrat
+RepJohnConyers,John Conyers,Democrat
+MacTXPress,Mac Thornberry,Republican
+GovRauner,Bruce Rauner,Republican
+senorrinhatch,Orrin Hatch,Republican
+RepLarryBucshon,Larry Bucshon,Republican
+Governor_LePage,Paul LePage,Republican
+JayInslee,Jay Inslee,Democrat
+NydiaVelazquez,Nydia Velázquez,Democrat
+GovHawaii,David Ige,Democrat
+RepDonaldPayne,Donald Payne Jr.,Democrat
+GovMalloyOffice,Dannel Malloy,Democrat
+SenDanSullivan,Dan Sullivan,Republican
+", stringsAsFactors = FALSE)
+new_data_4 <- new_data_4 %>% rename(screen_name = Screen.Name, party_new = Party)
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_data_4 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+head(alltweets_with_party_filled)
+
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+alltweets_na_unique <- alltweets_with_party_filled %>%
+  filter(is.na(party)) %>% 
+  distinct(screen_name, .keep_all = TRUE) 
+head(alltweets_na_unique)
+
+library(dplyr)
+new_data_5 <- read.csv(text = "
+Screen.Name,Full.Name,Party
+HouseDemocrats,House Democratic Caucus,Democrat
+JohnCornyn,John Cornyn,Republican
+JaredHuffman,Jared Huffman,Democrat
+JoshGottheimer,Josh Gottheimer,Democrat
+McCaskillOffice,Claire McCaskill,Democrat
+tedlieu,Ted Lieu,Democrat
+Grace4NY,Grace Meng,Democrat
+RepDarrenSoto,Darren Soto,Democrat
+davidcicilline,David Cicilline,Democrat
+LacyClayMO1,Lacy Clay,Democrat
+RepJackyRosen,Jacky Rosen,Democrat
+RepJayapal,Pramila Jayapal,Democrat
+mattgaetz,Matt Gaetz,Republican
+dandonovan_ny,Dan Donovan,Republican
+auctnr1,Billy Long,Republican
+RepEliotEngel,Eliot Engel,Democrat
+RepRalphNorman,Ralph Norman,Republican
+Vote4Cleaver,Emanuel Cleaver,Democrat
+sethmoulton,Seth Moulton,Democrat
+BettyMcCollum04,Betty McCollum,Democrat
+RepKinzinger,Adam Kinzinger,Republican
+SMurphyCongress,Stephanie Murphy,Democrat
+HouseBlueDogs,Blue Dog Coalition (Rep. Stephanie Murphy),Democrat
+TeamPelosi,Nancy Pelosi,Democrat
+CongBoyle,Brendan Boyle,Democrat
+HouseBudgetDems,House Budget Committee (Dem),Democrat
+NRDems,House Natural Resources Committee (Dem),Democrat
+ReElectNydia,Nydia Velázquez,Democrat
+sendavidperdue,David Perdue,Republican
+RepJimmyGomez,Jimmy Gomez,Democrat
+KathyCastorFL,Kathy Castor,Democrat
+VoteMarsha,Marsha Blackburn,Republican
+RepAnthonyBrown,Anthony Brown,Democrat
+RepJaredPolis,Jared Polis,Democrat
+SenateDems,Senate Democratic Caucus,Democrat
+EleanorNorton,Eleanor Holmes Norton,Democrat
+louforsenate,Lou Barletta,Republican
+RepBetoORourke,Beto O'Rourke,Democrat
+BobbyScott,Bobby Scott,Democrat
+HouseGOP,House Republican Conference,Republican
+HouseJudiciary,House Judiciary Committee (GOP),Republican
+JudgeJohnCarter,John Carter,Republican
+CongPalazzo,Steven Palazzo,Republican
+BetoORourke,Beto O'Rourke,Democrat
+Rosa_DeLauro,Rosa DeLauro,Democrat
+USProgressives,Congressional Progressive Caucus,Democrat
+JimRenacci,Jim Renacci,Republican
+RepAbraham,Ralph Abraham,Republican
+leezeldin,Lee Zeldin,Republican
+SenTinaSmith,Tina Smith,Democrat
+RepStephenLynch,Stephen Lynch,Democrat
+DWStweets,Debbie Wasserman Schultz,Democrat
+RepDebDingell,Debbie Dingell,Democrat
+BillPascrell,Bill Pascrell,Democrat
+AdamSchiffCA,Adam Schiff,Democrat
+LukeMesserIN,Luke Messer,Republican
+IndianCommittee,Senate Indian Affairs Committee,Republican
+RepMattGaetz,Matt Gaetz,Republican
+CaucusOnClimate,Climate Solutions Caucus,Bipartisan
+RepMarciaFudge,Marcia Fudge,Democrat
+TomReedCongress,Tom Reed,Republican
+MurrayCampaign,Patty Murray,Democrat
+RepLanceNJ7,Leonard Lance,Republican
+SenCortezMasto,Catherine Cortez Masto,Democrat
+Pearce4NM,Steve Pearce,Republican
+RepPeteOlson,Pete Olson,Republican
+RepOHalleran,Tom O'Halleran,Democrat
+RepRoybalAllard,Lucille Roybal-Allard,Democrat
+RepAlLawsonJr,Al Lawson,Democrat
+RepJenniffer,Jenniffer González-Colón,Republican
+JoeCrowleyNY,Joe Crowley,Democrat
+ToddRokita,Todd Rokita,Republican
+bradwenstrup,Brad Wenstrup,Republican
+JacksonLeeTX18,Sheila Jackson Lee,Democrat
+SenJoniErnst,Joni Ernst,Republican
+HomelandDems,House Homeland Security Committee (Dem),Democrat
+EnergyCommerce,House Energy and Commerce Committee,Bipartisan
+TeamCMR,Cathy McMorris Rodgers,Republican
+EllisonCampaign,Keith Ellison,Democrat
+DwightEvansPA,Dwight Evans,Democrat
+SenRubioPress,Marco Rubio,Republican
+JimmyGomezCA,Jimmy Gomez,Democrat
+TinaSmithMN,Tina Smith,Democrat
+KeithRothfus,Keith Rothfus,Republican
+ColleenHanabusa,Colleen Hanabusa,Democrat
+HouseHomeland,House Homeland Security Committee (GOP),Republican
+JohnKDelaney,John Delaney,Democrat
+BenCardinforMD,Ben Cardin,Democrat
+HouseJudDems,House Judiciary Committee (Dem),Democrat
+ScottPetersSD,Scott Peters,Democrat
+RepJohnYarmuth,John Yarmuth,Democrat
+HouseSmallBiz,House Small Business Committee,Bipartisan
+WaysMeansCmte,House Ways and Means Committee,Bipartisan
+TeamSheaPorter,Carol Shea-Porter,Democrat
+Menendez4NJ,Bob Menendez,Democrat
+standwithraul,Raul Grijalva,Democrat
+TedforCongress,Ted Deutch,Democrat
+Schneider4IL10,Brad Schneider,Democrat
+", stringsAsFactors = FALSE)
+new_data_5 <- new_data_5 %>% rename(screen_name = Screen.Name, party_new = Party)
+alltweets_na_unique <- alltweets_na_unique %>%
+  left_join(new_data_5 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rows_update(alltweets_na_unique, by = "screen_name")
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+sapply(alltweets_with_party_filled, function(x) sum(is.na(x)))
+table(alltweets_with_party_filled$party)
+
+library(dplyr)
+new_data_6 <- read.csv(text = "
+Screen.Name,Full.Name,Party
+EnergyCommerce,House Energy and Commerce Committee (Minority),Democratic
+TeamCMR,Cathy McMorris Rodgers,Republican
+EllisonCampaign,Keith Ellison,Democratic
+DwightEvansPA,Dwight Evans,Democratic
+SenRubioPress,Marco Rubio,Republican
+JimmyGomezCA,Jimmy Gomez,Democratic
+TinaSmithMN,Tina Smith,Democratic
+KeithRothfus,Keith Rothfus,Republican
+ColleenHanabusa,Colleen Hanabusa,Democratic
+HouseHomeland,House Homeland Security Committee (Majority),Republican
+JohnKDelaney,John Delaney,Democratic
+BenCardinforMD,Ben Cardin,Democratic
+HouseJudDems,House Judiciary Committee (Minority),Democratic
+ScottPetersSD,Scott Peters,Democratic
+RepJohnYarmuth,John Yarmuth,Democratic
+HouseSmallBiz,House Small Business Committee (Minority),Democratic
+WaysMeansCmte,House Ways and Means Committee (Minority),Democratic
+TeamSheaPorter,Carol Shea-Porter,Democratic
+Menendez4NJ,Bob Menendez,Democratic
+standwithraul,Raúl Grijalva,Democratic
+TedforCongress,Ted Deutch,Democratic
+Schneider4IL10,Brad Schneider,Democratic
+dankildee,Dan Kildee,Democratic
+McConnellPress,Mitch McConnell,Republican
+BudgetGOP,House Budget Committee (Majority),Republican
+JasonSmithMO,Jason Smith,Republican
+DickDurbin,Dick Durbin,Democratic
+Michelle4NM,Michelle Lujan Grisham,Democratic
+RobinLynneKelly,Robin Kelly,Democratic
+DarrenSoto,Darren Soto,Democratic
+TulsiGabbard,Tulsi Gabbard,Democratic
+SessionsforTX32,Pete Sessions,Republican
+DSenFloor,Senate Democratic Floor Updates,Democratic
+RepRohrabacher,Dana Rohrabacher,Republican
+RubenKihuen,Ruben Kihuen,Democratic
+HELPCmteDems,Senate HELP Committee (Minority),Democratic
+standwithbarry,Barry Loudermilk,Republican
+ericswalwell,Eric Swalwell,Democratic
+TeamHeinrich,Martin Heinrich,Democratic
+freedomcaucus,House Freedom Caucus,Republican
+michaelcburgess,Michael Burgess,Republican
+SpeakerRyan,Paul Ryan,Republican
+edworkforcedems,House Education and Workforce Committee (Minority),Democratic
+RepJohnCurtis,John Curtis,Republican
+BLeeForCongress,Barbara Lee,Democratic
+pallonefornj,Frank Pallone,Democratic
+tedcruz,Ted Cruz,Republican
+dccc,Democratic Congressional Campaign Committee,Democratic
+RepMikeCapuano,Mike Capuano,Democratic
+FairMediaCaucus,Not an office holder (Media Advocacy Group),Non-Partisan
+OversightDems,House Oversight Committee (Minority),Democratic
+AdamKinzinger,Adam Kinzinger,Republican
+SteveKnight25,Steve Knight,Republican
+CurtisUT,John Curtis,Republican
+CBWGCAUCUS,Congressional Black Women's Caucus,Democratic
+JohnLarsonCT,John Larson,Democratic
+McCaskill4MO,Claire McCaskill,Democratic
+MarkPocan,Mark Pocan,Democratic
+DonNorcross4NJ,Donald Norcross,Democratic
+Donald_McEachin,Donald McEachin,Democratic
+KarenBassTweets,Karen Bass,Democratic
+DonBeyerVA,Don Beyer,Democratic
+RaulLabrador4ID,Raúl Labrador,Republican
+senjudiciary,Senate Judiciary Committee (Majority),Republican
+JohnGaramendi,John Garamendi,Democratic
+UptonForAllOfUs,Fred Upton,Republican
+VoteYvette,Yvette Clarke,Democratic
+GrassleyPress,Chuck Grassley,Republican
+DaveBratVA7th,Dave Brat,Republican
+DonJBacon,Don Bacon,Republican
+HFACDemocrats,House Foreign Affairs Committee (Minority),Democratic
+LloydDoggettTX,Lloyd Doggett,Democratic
+Norma4Congress,Norma Torres,Democratic
+JerryNadler,Jerry Nadler,Democratic
+RepSchakowsky,Jan Schakowsky,Democratic
+RepGusBilirakis,Gus Bilirakis,Republican
+McHenryCampaign,Patrick McHenry,Republican
+BrendaLLawrence,Brenda Lawrence,Democratic
+DougJones,Doug Jones,Democratic
+VoteBetty,Betty McCollum,Democratic
+Bob_Casey,Bob Casey Jr.,Democratic
+RepBRochester,Lisa Blunt Rochester,Democratic
+", stringsAsFactors = FALSE)
+new_data_6 <- new_data_6 %>% rename(screen_name = Screen.Name, party_new = Party)
+alltweets_na_unique <- alltweets_na_unique %>%
+  left_join(new_data_6 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rows_update(alltweets_na_unique, by = "screen_name")
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_7 <- read.csv(text = "
+Screen_Name,Full_Name,Party
+ReElectCummings,Elijah Cummings,Democrat
+DemCloakroom,House Democratic Cloakroom,Democrat
+joekennedy,Joe Kennedy III,Democrat
+OfficialCBC,Congressional Black Caucus,Democrat
+BernieSanders,Bernie Sanders,Independent (Caucuses with Democrats)
+RonDeSantisFL,Ron DeSantis,Republican
+RandPaul,Rand Paul,Republican
+LindseyGrahamSC,Lindsey Graham,Republican
+EnergyGOP,House Energy and Commerce Committee Republicans,Republican
+HouseNewDems,New Democrat Coalition,Democrat
+RepRussell,Steve Russell,Republican
+OrrinHatch,Orrin Hatch,Republican
+HouseForeign,House Foreign Affairs Committee,Bipartisan/Organization
+amashoffice,Office of Justin Amash,Libertarian/Republican (at the time)
+Nanette4CA,Nanette Barragán,Democrat
+AnnLWagner,Ann Wagner,Republican
+libertycaucus,House Liberty Caucus,Republican
+RepCloakroom,House Republican Cloakroom,Republican
+VAChair,Johnny Isakson (Senate Veterans Affairs Chair),Republican
+StewartforUtah,Chris Stewart,Republican
+GrothmanforWI,Glenn Grothman,Republican
+SenMurphyOffice,Office of Chris Murphy,Democrat
+DianeBlackTN,Diane Black,Republican
+jackiewalorski,Jackie Walorski,Republican
+DianneFeinstein,Dianne Feinstein,Democrat
+SuzanDelBene,Suzan DelBene,Democrat
+TomCarperforDE,Tom Carper,Democrat
+HeidiHeitkamp,Heidi Heitkamp,Democrat
+StaceyPlaskett,Stacey Plaskett,Democrat
+NelsonForSenate,Bill Nelson,Democrat
+DeGette5280,Diana DeGette,Democrat
+johnculberson,John Culberson,Republican
+TomCottonAR,Tom Cotton,Republican
+tammybaldwin,Tammy Baldwin,Democrat
+RobertPittenger,Robert Pittenger,Republican
+Tom_Suozzi,Tom Suozzi,Democrat
+RepBuddyCarter,Buddy Carter,Republican
+SenDougJones,Doug Jones,Democrat
+HASCRepublicans,House Armed Services Committee Republicans,Republican
+HouseDemWomen,Democratic Women’s Caucus,Democrat
+Foster4Congress,Bill Foster,Democrat
+Elizabeth_Esty,Elizabeth Esty,Democrat
+jontester,Jon Tester,Democrat
+GOPoversight,House Oversight Committee Republicans,Republican
+Sewell4Congress,Terri Sewell,Democrat
+SenateAging,Senate Special Committee on Aging,Bipartisan/Organization
+TammyforIL,Tammy Duckworth,Democrat
+VoteMeadows,Mark Meadows,Republican
+RobBishopUT,Rob Bishop,Republican
+val_demings,Val Demings,Democrat
+ToddRokitaIN,Todd Rokita,Republican
+ASEANCaucus,Congressional ASEAN Caucus,Bipartisan
+BarbaraComstock,Barbara Comstock,Republican
+SenateAgGOP,Senate Agriculture Committee Republicans,Republican
+EvanJenkinsWV,Evan Jenkins,Republican
+MarkDeSaulnier,Mark DeSaulnier,Democrat
+Boozman4AR,John Boozman,Republican
+SenateRPC,Senate Republican Policy Committee,Republican
+Gwen4Congress,Gwen Moore,Democrat
+JoeforIndiana,Joe Donnelly,Democrat
+senategopfloor,Senate Republican Floor Operations,Republican
+GreggHarper,Gregg Harper,Republican
+EdWorkforce,House Committee on Education and the Workforce,Bipartisan/Organization
+MariaCantwell,Maria Cantwell,Democrat
+Ed4Colorado,Ed Perlmutter,Democrat
+RepKHandel,Karen Handel,Republican
+JudiciaryDems,House/Senate Judiciary Committee Democrats,Democrat
+EPWDems,Senate Environment and Public Works Committee Democrats,Democrat
+RepMGriffith,Morgan Griffith,Republican
+peopleforben,Ben Ray Luján,Democrat
+Flores4Congress,Bill Flores,Republican
+SanfordBishop,Sanford Bishop,Democrat
+SDGovDaugaard,Dennis Daugaard,Republican
+MarkAmodeiNV2,Mark Amodei,Republican
+repkihuen,Ruben Kihuen,Democrat
+congboyle,Brendan Boyle,Democrat
+", stringsAsFactors = FALSE)
+new_data_7 <- new_data_7 %>% rename(screen_name = Screen_Name, party_new = Party)
+alltweets_na_unique <- alltweets_na_unique %>%
+  left_join(new_data_7 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rows_update(alltweets_na_unique, by = "screen_name")
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_8 <- read.csv(text = "
+Screen_Name,Full_Name,Party
+SDGovDaugaard,Dennis Daugaard,Republican
+MarkAmodeiNV2,Mark Amodei,Republican
+repkihuen,Ruben Kihuen,Democrat
+congboyle,Brendan Boyle,Democrat
+teamsheaporter,Carol Shea-Porter,Democrat
+repdonbeyer,Don Beyer,Democrat
+grace4ny,Grace Meng,Democrat
+norma4congress,Norma Torres,Democrat
+susanwbrooks,Susan Brooks,Republican
+repjenniffer,Jenniffer González-Colón,Republican
+donjbacon,Don Bacon,Republican
+repkinzinger,Adam Kinzinger,Republican
+homelanddems,House Homeland Security Committee Democrats,Democrat
+rokhanna,Ro Khanna,Democrat
+senatedems,Senate Democrats,Democrat
+senbobcasey,Bob Casey Jr.,Democrat
+oversightdems,House Oversight Committee Democrats,Democrat
+repmaloney,Carolyn Maloney,Democrat
+repmikecapuano,Mike Capuano,Democrat
+replujangrisham,Michelle Lujan Grisham,Democrat
+desjarlaistn04,Scott DesJarlais,Republican
+rogermarshallmd,Roger Marshall,Republican
+robin42cd,Robin Kelly,Democrat
+repjohnconyers,John Conyers,Democrat
+housejuddems,House Judiciary Committee Democrats,Democrat
+housegop,House Republicans,Republican
+repbobbyrush,Bobby Rush,Democrat
+toddrokitain,Todd Rokita,Republican
+repjerrynadler,Jerry Nadler,Democrat
+repjackyrosen,Jacky Rosen,Democrat
+lacyclaymo1,Lacy Clay,Democrat
+elisestefanik,Elise Stefanik,Republican
+betoorourke,Beto O'Rourke,Democrat
+nanette4ca,Nanette Barragán,Democrat
+repmcgovern,Jim McGovern,Democrat
+tulsigabbard,Tulsi Gabbard,Democrat
+johnkdelaney,John Delaney,Democrat
+repespaillat,Adriano Espaillat,Democrat
+hurdonthehill,Will Hurd,Republican
+jacksonleetx18,Sheila Jackson Lee,Democrat
+johncornyn,John Cornyn,Republican
+chrismurphyct,Chris Murphy,Democrat
+repmccaul,Michael McCaul,Republican
+mcconnellpress,Mitch McConnell (Press Office),Republican
+jaredhuffman,Jared Huffman,Democrat
+pearce4nm,Steve Pearce,Republican
+housejudiciary,House Judiciary Committee,Bipartisan/Republican Controlled (2017)
+repdwstweets,Debbie Wasserman Schultz,Democrat
+officialcbc,Congressional Black Caucus,Democrat
+repdianadegette,Diana DeGette,Democrat
+senmarkey,Ed Markey,Democrat
+jeffmerkley,Jeff Merkley,Democrat
+usrepgarypalmer,Gary Palmer,Republican
+bettymccollum04,Betty McCollum,Democrat
+electsmucker,Lloyd Smucker,Republican
+senatorcardin,Ben Cardin,Democrat
+hispaniccaucus,Congressional Hispanic Caucus,Democrat
+repdonaldpayne,Donald Payne Jr.,Democrat
+berniesanders,Bernie Sanders,Independent (Caucuses with Democrats)
+deanheller,Dean Heller,Republican
+call_me_dutch,Dutch Ruppersberger,Democrat
+repdandonovan,Dan Donovan,Republican
+repteddeutch,Ted Deutch,Democrat
+repscottperry,Scott Perry,Republican
+jimlangevin,Jim Langevin,Democrat
+repmiketurner,Mike Turner,Republican
+repyvetteclarke,Yvette Clarke,Democrat
+repdavideprice,David Price,Democrat
+sencortezmasto,Catherine Cortez Masto,Democrat
+rodneydavis,Rodney Davis,Republican
+capac,Congressional Asian Pacific American Caucus,Democrat
+tomcoleok04,Tom Cole,Republican
+repalexmooney,Alex Mooney,Republican
+rephalrogers,Hal Rogers,Republican
+housebluedogs,Blue Dog Coalition,Democrat
+reptomsuozzi,Tom Suozzi,Democrat
+edmarkey,Ed Markey,Democrat
+repjayapal,Pramila Jayapal,Democrat
+repedroyce,Ed Royce,Republican
+senatorhassan,Maggie Hassan,Democrat
+catherinefornv,Catherine Cortez Masto,Democrat
+reprutherfordfl,John Rutherford,Republican
+repandybiggsaz,Andy Biggs,Republican
+repmceachin,Donald McEachin,Democrat
+gkbutterfield,G.K. Butterfield,Democrat
+reptomgarrett,Tom Garrett,Republican
+eleanornorton,Eleanor Holmes Norton,Democrat
+housedemocrats,House Democrats,Democrat
+rephankjohnson,Hank Johnson,Democrat
+kamalaharris,Kamala Harris,Democrat
+teampelosi,Nancy Pelosi,Democrat
+drnealdunnfl2,Neal Dunn,Republican
+markamodeinv2,Mark Amodei,Republican
+repadams,Alma Adams,Democrat
+repbuddycarter,Buddy Carter,Republican
+senatorcarper,Tom Carper,Democrat
+douglamalfa,Doug LaMalfa,Republican
+repgonzalez,Vicente Gonzalez,Democrat
+macthornberry,Mac Thornberry,Republican
+repjoekennedy,Joe Kennedy III,Democrat
+reprickallen,Rick Allen,Republican
+joshgottheimer,Josh Gottheimer,Democrat
+judgejohncarter,John Carter,Republican
+senbooker,Cory Booker,Democrat
+", stringsAsFactors = FALSE)
+new_data_8 <- new_data_8 %>% rename(screen_name = Screen_Name, party_new = Party)
+alltweets_na_unique <- alltweets_na_unique %>%
+  left_join(new_data_8 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rows_update(alltweets_na_unique, by = "screen_name")
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_9 <- read.csv(text = "
+Screen_Name,Full_Name,Party
+repmckinley,David McKinley,Republican
+repschneider,Brad Schneider,Democrat
+repebj,Eddie Bernice Johnson,Democrat
+senategop,Senate Republicans,Republican
+repcharliedent,Charlie Dent,Republican
+robwittman,Rob Wittman,Republican
+heinrich4nm,Martin Heinrich,Democrat
+nrdems,House Natural Resources Committee Democrats,Democrat
+repterrisewell,Terri Sewell,Democrat
+senatorenzi,Mike Enzi,Republican
+repmaxinewaters,Maxine Waters,Democrat
+senatormenendez,Bob Menendez,Democrat
+flores4congress,Bill Flores,Republican
+timryan,Tim Ryan,Democrat
+bobbyscott,Bobby Scott,Democrat
+keithrothfus,Keith Rothfus,Republican
+reptimwalz,Tim Walz,Democrat
+mccaulfortexas,Michael McCaul,Republican
+repstephenlynch,Stephen Lynch,Democrat
+senjohnmccain,John McCain,Republican
+repbarragan,Nanette Barragán,Democrat
+repcloakroom,House Republican Cloakroom,Republican
+repannaeshoo,Anna Eshoo,Democrat
+austinscottga08,Austin Scott,Republican
+repdebdingell,Debbie Dingell,Democrat
+repbost,Mike Bost,Republican
+votedianeblack,Diane Black,Republican
+benniegthompson,Bennie Thompson,Democrat
+markwaynemullin,Markwayne Mullin,Republican
+sentoomey,Pat Toomey,Republican
+randpaul,Rand Paul,Republican
+drpaulgosar,Paul Gosar,Republican
+grassleypress,Chuck Grassley (Press),Republican
+repcummings,Elijah Cummings,Democrat
+chriscoons,Chris Coons,Democrat
+barrforcongress,Andy Barr,Republican
+lamarsmithtx21,Lamar Smith,Republican
+sensanders,Bernie Sanders,Independent
+repgosar,Paul Gosar,Republican
+repandybarr,Andy Barr,Republican
+conawaytx11,Mike Conaway,Republican
+replancenj7,Leonard Lance,Republican
+senjackreed,Jack Reed,Democrat
+steveknight25,Steve Knight,Republican
+westermanar,Bruce Westerman,Republican
+luetkemeyerb,Blaine Luetkemeyer,Republican
+reproybalallard,Lucille Roybal-Allard,Democrat
+sessionsfortx32,Pete Sessions,Republican
+reptommacarthur,Tom MacArthur,Republican
+lukemesserin,Luke Messer,Republican
+rogerwilliamstx,Roger Williams,Republican
+clyburn,Jim Clyburn,Democrat
+usreprodney,Rodney Davis,Republican
+repjohnyarmuth,John Yarmuth,Democrat
+senrubiopress,Marco Rubio (Press),Republican
+drphilroe,Phil Roe,Republican
+loubarletta,Lou Barletta,Republican
+rephastingsfl,Alcee Hastings,Democrat
+repsanfordsc,Mark Sanford,Republican
+toddrokita,Todd Rokita,Republican
+senfranken,Al Franken,Democrat
+pattiberi,Pat Tiberi,Republican
+househomeland,House Homeland Security Committee (GOP),Republican
+rodblum,Rod Blum,Republican
+speakerryan,Paul Ryan,Republican
+repstevepearce,Steve Pearce,Republican
+peteolson,Pete Olson,Republican
+repdrewferguson,Drew Ferguson,Republican
+staceyplaskett,Stacey Plaskett,Democrat
+davebratva7th,Dave Brat,Republican
+gerryconnolly,Gerry Connolly,Democrat
+gwen4congress,Gwen Moore,Democrat
+repkarenbass,Karen Bass,Democrat
+reppeteking,Peter King,Republican
+senaterpc,Senate Republican Policy Committee,Republican
+replindasanchez,Linda Sánchez,Democrat
+", stringsAsFactors = FALSE)
+new_data_9 <- new_data_9 %>% rename(screen_name = Screen_Name, party_new = Party)
+alltweets_na_unique <- alltweets_na_unique %>%
+  left_join(new_data_9 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rows_update(alltweets_na_unique, by = "screen_name")
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+
+library(dplyr)
+new_data_10 <- read.csv(text = "
+Screen_Name,Full_Name,Party
+repsanfordsc,Mark Sanford,Republican
+toddrokita,Todd Rokita,Republican
+senfranken,Al Franken,Democrat
+pattiberi,Pat Tiberi,Republican
+househomeland,House Homeland Security Committee (GOP),Republican
+rodblum,Rod Blum,Republican
+speakerryan,Paul Ryan,Republican
+repstevepearce,Steve Pearce,Republican
+peteolson,Pete Olson,Republican
+repdrewferguson,Drew Ferguson,Republican
+staceyplaskett,Stacey Plaskett,Democrat
+davebratva7th,Dave Brat,Republican
+gerryconnolly,Gerry Connolly,Democrat
+gwen4congress,Gwen Moore,Democrat
+repkarenbass,Karen Bass,Democrat
+reppeteking,Peter King,Republican
+senaterpc,Senate Republican Policy Committee,Republican
+replindasanchez,Linda Sánchez,Democrat
+dickdurbin,Dick Durbin,Democrat
+liz_cheney,Liz Cheney,Republican
+houseagnews,House Agriculture Committee (GOP),Republican
+congpalazzo,Steven Palazzo,Republican
+menendez4nj,Bob Menendez,Democrat
+repsheaporter,Carol Shea-Porter,Democrat
+bleeforcongress,Barbara Lee,Democrat
+usrepkcastor,Kathy Castor,Democrat
+repmikerogersal,Mike Rogers,Republican
+repstevechabot,Steve Chabot,Republican
+donbeyerva,Don Beyer,Democrat
+repallawsonjr,Al Lawson,Democrat
+replarrybucshon,Larry Bucshon,Republican
+judgecarter,John Carter,Republican
+repchuck,Chuck Fleischmann,Republican
+repdavebrat,Dave Brat,Republican
+grothmanforwi,Glenn Grothman,Republican
+markdesaulnier,Mark DeSaulnier,Democrat
+sencapito,Shelley Moore Capito,Republican
+joecrowleyny,Joe Crowley,Democrat
+senbennetco,Michael Bennet,Democrat
+senthomtillis,Thom Tillis,Republican
+repfilemonvela,Filemon Vela,Democrat
+donnorcross4nj,Donald Norcross,Democrat
+energydems,House Energy and Commerce Committee Democrats,Democrat
+raul_labrador,Raúl Labrador,Republican
+usreplong,Billy Long,Republican
+peters4michigan,Gary Peters,Democrat
+repralphnorman,Ralph Norman,Republican
+mikekellypa,Mike Kelly,Republican
+nrcc,National Republican Congressional Committee,Republican
+repanthonybrown,Anthony Brown,Democrat
+reptenney,Claudia Tenney,Republican
+repabraham,Ralph Abraham,Republican
+jimrenacci,Jim Renacci,Republican
+repbrendanboyle,Brendan Boyle,Democrat
+repcartwright,Matt Cartwright,Democrat
+repdankildee,Dan Kildee,Democrat
+vickyh4congress,Vicky Hartzler,Republican
+budgetgop,House Budget Committee (GOP),Republican
+repkevinbrady,Kevin Brady,Republican
+repanniekuster,Annie Kuster,Democrat
+reprickcrawford,Rick Crawford,Republican
+usrepmikedoyle,Mike Doyle,Democrat
+dwstweets,Debbie Wasserman Schultz,Democrat
+kristinoem,Kristi Noem,Republican
+charliecrist,Charlie Crist,Democrat
+sherrodbrown,Sherrod Brown,Democrat
+repcuellar,Henry Cuellar,Democrat
+pryan,Paul Ryan,Republican
+reprussell,Steve Russell,Republican
+senmurphyoffice,Chris Murphy (Office),Democrat
+jecdems,Joint Economic Committee Democrats,Democrat
+senatorisakson,Johnny Isakson,Republican
+houseadmngop,House Administration Committee (GOP),Republican
+chuckgrassley,Chuck Grassley,Republican
+repjoseserrano,José Serrano,Democrat
+jim_banks,Jim Banks,Republican
+adamschiffca,Adam Schiff,Democrat
+repbrochester,Lisa Blunt Rochester,Democrat
+stevekingia,Steve King,Republican
+repjimrenacci,Jim Renacci,Republican
+jeffdenham,Jeff Denham,Republican
+vote4cleaver,Emanuel Cleaver,Democrat
+rondesantisfl,Ron DeSantis,Republican
+repeliotengel,Eliot Engel,Democrat
+katherineclark,Katherine Clark,Democrat
+paultonko,Paul Tonko,Democrat
+boozman4ar,John Boozman,Republican
+repraulgrijalva,Raúl Grijalva,Democrat
+repdarrensoto,Darren Soto,Democrat
+murraycampaign,Patty Murray (Campaign),Democrat
+repseanmaloney,Sean Patrick Maloney,Democrat
+andybiggs4az,Andy Biggs,Republican
+houseforeign,House Foreign Affairs Committee (GOP),Republican
+prochoicecaucus,Congressional Pro-Choice Caucus,Democrat
+carloslcurbelo,Carlos Curbelo,Republican
+mikerogerscamp,Mike Rogers (Campaign),Republican
+jerrynadler,Jerri Nadler,Democrat
+brendallawrence,Brenda Lawrence,Democrat
+garrettforva,Tom Garrett,Republican
+sensasse,Ben Sasse,Republican
+edrroyce,Ed Royce,Republican
+repschakowsky,Jan Schakowsky,Democrat
+tgowdysc,Trey Gowdy,Republican
+tomemmer, Tom Emmer,Republican
+repbrady,Robert Brady,Democrat
+hfacdemocrats,House Foreign Affairs Committee Democrats,Democrat
+lloyddoggetttx,Lloyd Doggett,Democrat
+indiancommittee,Senate Committee on Indian Affairs,Republican
+mcgovernma,Jim McGovern,Democrat
+repbetoorourke,Beto O'Rourke,Democrat
+jimmygomezca,Jimmy Gomez,Democrat
+reelectcummings,Elijah Cummings (Campaign),Democrat
+dscc,Democratic Senatorial Campaign Committee,Democrat
+bob_casey,Bob Casey,Democrat
+tomreedcongress,Tom Reed,Republican
+hascrepublicans,House Armed Services Committee (GOP),Republican
+repgutierrez,Luis Gutiérrez,Democrat
+duffy4wisconsin,Sean Duffy,Republican
+diannefeinstein,Dianne Feinstein,Democrat
+energycommerce,House Energy and Commerce Committee (GOP),Republican
+douglas_collins,Doug Collins,Republican
+reparrington,Jodey Arrington,Republican
+joeforindiana,Joe Donnelly,Democrat
+tomohalleran,Tom O'Halleran,Democrat
+darrensoto,Darren Soto,Democrat
+natresources,House Natural Resources Committee (GOP),Republican
+mike_ca05,Mike Thompson,Democrat
+matsui4congress,Doris Matsui,Democrat
+repvisclosky,Pete Visclosky,Democrat
+republicanstudy,Republican Study Committee,Republican
+electmikebishop,Mike Bishop,Republican
+mikecrapo,Mike Crapo,Republican
+repandyharrismd,Andy Harris,Republican
+lgbteqcaucus,Congressional LGBTQ+ Equality Caucus,Democrat
+joemanchinwv,Joe Manchin,Democrat
+vetaffairsdems,House Veterans' Affairs Committee Democrats,Democrat
+demsonaging,Senate Special Committee on Aging Democrats,Democrat
+elizabeth_esty,Elizabeth Esty,Democrat
+", stringsAsFactors = FALSE)
+new_data_10 <- new_data_10 %>% rename(screen_name = Screen_Name, party_new = Party)
+alltweets_na_unique <- alltweets_na_unique %>%
+  left_join(new_data_10 %>% select(screen_name, party_new), by = "screen_name") %>%
+  mutate(party = ifelse(is.na(party), party_new, party)) %>%
+  select(-party_new)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rows_update(alltweets_na_unique, by = "screen_name")
+head(alltweets_with_party_filled)
+alltweets_with_party_filled %>%
+  summarise(party_na = sum(is.na(party)))
+remaining_na_parties <- alltweets_with_party_filled %>%
+  filter(is.na(party))
+nrow(remaining_na_parties)
+head(remaining_na_parties)
+
+new_party_data <- data.frame(
+  screen_name = c("LGBTEqCaucus", "claudiatenney", "Kilili_Sablan", 
+                  "repmarciafudge", "gopleader", "reppeteolson", "reptipton"),
+  full_name = c("Congressional LGBTQ+ Equality Caucus", "Claudia Tenney",
+                "Gregorio Kilili Camacho Sablan", "Marcia Fudge", 
+                "Kevin McCarthy", "Pete Olson", "Scott Tipton"),
+  party = c("Democratic-led", "Republican", "Democratic", "Democratic",
+            "Republican", "Republican", "Republican")
+)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_party_data, by = "screen_name") %>%
+  mutate(party = coalesce(party.y, party.x)) %>%
+  select(-party.x, -party.y)
+remaining_na_parties <- alltweets_with_party_filled %>% filter(is.na(party))
+nrow(remaining_na_parties)
+
+new_party_data2 <- data.frame(
+  screen_name = c(
+    "LisaBRochester", "RepClayHiggins", "Jim_Banks", "GarrettforVA", "CBCPAC",
+    "CardenasforCA", "Liz_Cheney", "RepGosar", "PeteOlson", "elizabethforma",
+    "MiaBLove", "carolynbmaloney", "senschumer", "usrepricknolan", "billpascrell",
+    "voteyvette", "lindseygrahamsc", "senatemajldr", "repohalleran", "senatordurbin",
+    "repbonnie", "herrerabeutler", "mccaskilloffice", "usprogressives", "jiminhofe",
+    "waysmeanscmte", "bradyfortexas", "dwightevanspa", "nydiavelazquez", "dsenfloor",
+    "repdavejoyce", "schneider4il10", "smurphycongress", "bensasse", "kathycastorfl"
+  ),
+  full_name = c(
+    "Lisa Blunt Rochester", "Clay Higgins", "Jim Banks", "Tom Garrett",
+    "Congressional Black Caucus PAC", "Tony Cárdenas", "Liz Cheney", "Paul Gosar",
+    "Pete Olson", "Elizabeth Warren", "Mia Love", "Carolyn Maloney", "Chuck Schumer",
+    "Rick Nolan", "Bill Pascrell", "Yvette Clarke", "Lindsey Graham", "Mitch McConnell",
+    "Tom O'Halleran", "Dick Durbin", "Bonnie Watson Coleman", "Jaime Herrera Beutler",
+    "Claire McCaskill", "Congressional Progressive Caucus", "Jim Inhofe",
+    "House Ways and Means Committee", "Kevin Brady", "Dwight Evans", "Nydia Velázquez",
+    "Senate Democrats", "David Joyce", "Brad Schneider", "Stephanie Murphy", "Ben Sasse",
+    "Kathy Castor"
+  ),
+  party = c(
+    "Democratic", "Republican", "Republican", "Republican", "Democratic",
+    "Democratic", "Republican", "Republican", "Republican", "Democratic",
+    "Republican", "Democratic", "Democratic", "Democratic", "Democratic",
+    "Democratic", "Republican", "Republican", "Democratic", "Democratic",
+    "Democratic", "Republican", "Democratic", "Democratic", "Republican",
+    "Republican", "Republican", "Democratic", "Democratic", "Democratic",
+    "Republican", "Democratic", "Democratic", "Republican", "Democratic"
+  )
+)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_party_data2, by = "screen_name") %>%
+  mutate(party = coalesce(party.y, party.x)) %>%
+  select(-party.x, -party.y)
+remaining_na_parties <- alltweets_with_party_filled %>% filter(is.na(party))
+nrow(remaining_na_parties)
+remaining_na_parties_df <- alltweets_with_party_filled %>%
+  filter(is.na(party))
+nrow(remaining_na_parties_df)
+remaining_na_parties_df
+
+new_parties <- tibble::tibble(
+  screen_name = c(
+    "HolcombForIN","NatResources","billhuizenga","michelle4nm","kyrstensinema",
+    "waysandmeansgop","johnsonleads","foxxforcongress","ed4colorado","jasonsmithmo",
+    "johnfasony","repgregorymeeks","usrepkeating","nrsc","senatorstrange",
+    "repkhandel","housebudgetdems","reploucorrea","houseappropsgop","daveforiowa",
+    "dianeblacktn","mimiwaltersca"
+  ),
+  party = c(
+    "Republican","Republican","Republican","Democrat","Independent",
+    "Republican","Republican","Republican","Democrat","Republican",
+    "Republican","Democrat","Democrat","Republican","Republican",
+    "Democrat","Democrat","Democrat","Republican","Democrat",
+    "Republican","Republican"
+  )
+)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  left_join(new_parties, by = "screen_name", suffix = c("", ".new")) %>%
+  mutate(party = ifelse(!is.na(party.new), party.new, party)) %>%
+  select(-party.new)
+sum(is.na(alltweets_with_party_filled$party))
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  select(created_at, retweet_count, screen_name, text, ideology, sentiment, case, full_name, party)
+str(alltweets_with_party_filled)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  rename(full_name = full_namex)
+colnames(alltweets_with_party_filled)
+
+library(dplyr)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(
+    party = case_when(
+      party %in% c("Democratic", "Democratic-led") ~ "Democrat",
+      TRUE ~ party
+    )
+  )
+
+table(alltweets_with_party_filled$party, useNA = "ifany")
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(party_clean = case_when(
+    grepl("Democratic", party, ignore.case = TRUE) ~ "Democrat",
+    grepl("Republican", party, ignore.case = TRUE) ~ "Republican",
+    grepl("Bipartisan/Organization|Bipartisan/Republican Controlled", party, ignore.case = TRUE) ~ "Bipartisan",
+    grepl("Democrat/Non-Partisan", party, ignore.case = TRUE) ~ "Non-Partisan",
+    grepl("Libertarian/Republican", party, ignore.case = TRUE) ~ "Republican",
+    grepl("Independent \\(Caucuses with Democrats\\)", party, ignore.case = TRUE) ~ "Independent",
+    TRUE ~ party
+  ))
+
+library(dplyr)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(
+    party_clean = case_when(
+      party_clean %in% c("Anti-Masonic Adams", "Anti-Masonic Jackson") ~ "Republican",
+      party_clean == "Federalist" ~ "Democrat",
+      TRUE ~ party_clean
+    )
+  )
+
+library(dplyr)
+library(ggplot2)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(party_clean = case_when(
+    party_clean %in% c("Democratic", "Democratic-led", "Pro-Administration") ~ "Democrat",
+    party_clean %in% c("Bipartisan/Organization", "Bipartisan/Republican Controlled") ~ "Bipartisan",
+    party_clean == "Democrat/Non-Partisan" ~ "Non-Partisan",
+    party_clean == "Libertarian/Republican (at the time)" ~ "Republican",
+    party_clean == "Independent (Caucuses with Democrats)" ~ "Independent",
+    TRUE ~ party_clean
+  ))
+library(dplyr)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(
+    party_clean = case_when(
+      party_clean %in% c("Anti-Masonic", "Adams", "Jackson") ~ "Republican",
+      party_clean == "Federalist" ~ "Democrat",
+      TRUE ~ party_clean
+    )
+  )
+library(dplyr)
+library(ggplot2)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(party_clean = case_when(
+    party_clean %in% c("Democratic", "Democratic-led", "Pro-Administration") ~ "Democrat",
+    party_clean %in% c("Bipartisan/Organization", "Bipartisan/Republican Controlled") ~ "Bipartisan",
+    party_clean == "Democrat/Non-Partisan" ~ "Non-Partisan",
+    party_clean == "Libertarian/Republican (at the time)" ~ "Republican",
+    party_clean == "Independent (Caucuses with Democrats)" ~ "Independent",
+    TRUE ~ party_clean
+  ))
+
+library(dplyr)
+library(ggplot2)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(party_clean = ifelse(party_clean == "Pro-Administration", "Democrat", party_clean))
+library(dplyr)
+library(ggplot2)
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(party_clean = ifelse(party_clean == "Anti-Masonic", "Republican", party_clean))
+alltweets_with_party_filled$party_clean <- ifelse(
+  alltweets_with_party_filled$party_clean == "Whig",
+  "Republican",
+  alltweets_with_party_filled$party_clean
+)
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(party_clean = ifelse(party_clean == "Bipartisan", "Democrat", party_clean))
+
+library(dplyr)
+library(ggplot2)
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(sentiment_cat = case_when(
+    sentiment < -0.05 ~ "Left",
+    sentiment > 0.05 ~ "Right",
+    TRUE ~ "Neutral"
+  ))
+
+party_sentiment_prop <- alltweets_with_party_filled %>%
+  group_by(party_clean, sentiment_cat) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(party_clean) %>%
+  mutate(prop = count / sum(count))
+
+ggplot(party_sentiment_prop, aes(x = party_clean, y = prop, fill = sentiment_cat)) +
+  geom_bar(stat = "identity") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Proportional Sentiment by Party",
+       x = "Party",
+       y = "Proportion of Tweets",
+       fill = "Sentiment") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
