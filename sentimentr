@@ -207,3 +207,19 @@ print(
 )
 as.data.frame(sentiment_summary)
 
+library(dplyr)
+sample_near <- function(data, target, window = 0.05) {
+  data %>%
+    filter(abs(sentiment - target) <= window) %>%
+    slice_sample(n = 1) %>%
+    mutate(target_sentiment = target)
+}
+
+tweet_neg1 <- sample_near(alltweets_with_party_filled, -1)
+tweet_zero <- sample_near(alltweets_with_party_filled, 0)
+tweet_pos1 <- sample_near(alltweets_with_party_filled, 1)
+
+sample_tweets <- bind_rows(tweet_neg1, tweet_zero, tweet_pos1)
+
+sample_tweets <- bind_rows(tweet_neg1, tweet_zero, tweet_pos1)
+View(sample_tweets)
