@@ -1,0 +1,61 @@
+install.packages("sentimentr")
+library(sentimentr)
+library(dplyr)
+library(sentimentr)
+
+parkland_sentences <- get_sentences(parkland_filtered2$text)
+parkland_sentiment <- sentiment_by(parkland_sentences)
+parkland_filtered2$sentiment <- parkland_sentiment$ave_sentiment
+summary(parkland_filtered2$sentiment)
+View(parkland_filtered2)
+
+vegas_sentences <- get_sentences(vegas_filtered2$text)
+vegas_sentiment <- sentiment_by(vegas_sentences)
+vegas_filtered2$sentiment <- vegas_sentiment$ave_sentiment
+
+aurora_sentences <- get_sentences(aurora_filtered2$text)
+aurora_sentiment <- sentiment_by(aurora_sentences)
+aurora_filtered2$sentiment <- aurora_sentiment$ave_sentiment
+
+sandyhook_sentences <- get_sentences(sandyhook_filtered$text)
+sandyhook_sentiment <- sentiment_by(sandyhook_sentences)
+sandyhook_filtered$sentiment <- sandyhook_sentiment$ave_sentiment
+
+orlando_sentences <- get_sentences(orlando_filtered2$text)
+orlando_sentiment <- sentiment_by(orlando_sentences)
+orlando_filtered2$sentiment <- orlando_sentiment$ave_sentiment
+
+library(ggplot2)
+
+ggplot(parkland_filtered2, aes(x = sentiment)) +
+  geom_histogram(binwidth = 0.1, fill = "steelblue", color = "black", alpha = 0.7) +
+  labs(
+    title = "Sentiment Distribution — Parkland Tweets",
+    x = "Sentiment Score (Negative → Positive)",
+    y = "Number of Tweets"
+  ) +
+  theme_minimal()
+
+ggplot(vegas_filtered2, aes(x = sentiment)) +
+  geom_histogram(binwidth = 0.1, fill = "firebrick", color = "black", alpha = 0.7) +
+  labs(title = "Sentiment Distribution — Vegas Tweets",
+       x = "Sentiment Score (Negative → Positive)", y = "Number of Tweets") +
+  theme_minimal()
+
+ggplot(aurora_filtered2, aes(x = sentiment)) +
+  geom_histogram(binwidth = 0.1, fill = "forestgreen", color = "black", alpha = 0.7) +
+  labs(title = "Sentiment Distribution — Aurora Tweets",
+       x = "Sentiment Score (Negative → Positive)", y = "Number of Tweets") +
+  theme_minimal()
+
+ggplot(sandyhook_filtered, aes(x = sentiment)) +
+  geom_histogram(binwidth = 0.1, fill = "purple", color = "black", alpha = 0.7) +
+  labs(title = "Sentiment Distribution — Sandy Hook Tweets",
+       x = "Sentiment Score (Negative → Positive)", y = "Number of Tweets") +
+  theme_minimal()
+
+ggplot(orlando_filtered2, aes(x = sentiment)) +
+  geom_histogram(binwidth = 0.1, fill = "orange", color = "black", alpha = 0.7) +
+  labs(title = "Sentiment Distribution — Orlando Tweets",
+       x = "Sentiment Score (Negative → Positive)", y = "Number of Tweets") +
+  theme_minimal()
