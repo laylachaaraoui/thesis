@@ -1,6 +1,5 @@
 library(dplyr)
 
-# Combine all case study datasets into one
 alltweets <- bind_rows(
   orlando_filtered,
   parkland_filtered,
@@ -8,16 +7,161 @@ alltweets <- bind_rows(
   vegas_filtered,
   aurora_filtered
 )
-
-# Quick check
 dim(alltweets)
 head(alltweets)
 table(alltweets$party, useNA = "ifany")
 library(dplyr)
-
 alltweets <- alltweets %>%
   select(-user_id, -time, -link, -screen_clean, -screen_last_guess, -screen_name_clean, -party)
-
-# Quick check
 colnames(alltweets)
 head(alltweets)
+
+library(dplyr)
+library(stringr)
+library(purrr)
+
+nrow(alltweets)
+titles <- c("Governor", "Senator", "U.S.", "Rep.", "Representative", "Sen.", "Congressman", "Congresswoman")
+
+users_split <- users_flat %>%
+  mutate(
+    name_clean = str_remove_all(name, paste(titles, collapse = "|")),
+    name_clean = str_squish(name_clean),
+    name_words = str_split(name_clean, " "),
+    first_name = map_chr(name_words, ~ .x[1]),
+    last_name  = map_chr(name_words, ~ tail(.x, 1)),
+    first_name_lower = str_to_lower(first_name),
+    last_name_lower  = str_to_lower(last_name)
+  ) %>%
+  select(screen_name, first_name, last_name, first_name_lower, last_name_lower)
+legislators_match <- legislators %>%
+  mutate(
+    first_name_lower = str_to_lower(first_name),
+    last_name_lower  = str_to_lower(last_name)
+  ) %>%
+  select(first_name_lower, last_name_lower, full_name, party)
+users_with_party <- users_split %>%
+  left_join(legislators_match, by = c("first_name_lower", "last_name_lower"))
+legislators_last <- legislators_match %>%
+  select(last_name_lower, full_name_last = full_name, party_last = party) %>%
+  distinct()
+users_with_party <- users_with_party %>%
+  left_join(legislators_last, by = "last_name_lower") %>%
+  mutate(
+    full_name = if_else(is.na(full_name), full_name_last, full_name),
+    party     = if_else(is.na(party), party_last, party)
+  ) %>%
+  select(screen_name, full_name, party) %>%
+  distinct(screen_name, .keep_all = TRUE) 
+alltweets_with_party <- alltweets %>%
+  left_join(users_with_party, by = "screen_name")
+nrow(alltweets_with_party) 
+
+library(dplyr)
+party_counts <- alltweets_with_party %>%
+  count(party, sort = TRUE) %>%
+  mutate(percentage = n / sum(n) * 100)
+party_counts
+
+library(dplyr)
+library(stringdist)
+na_tweets <- alltweets_with_party %>% filter(is.na(party))
+fuzzy_fill_party <- function(screen_name, users_df) {
+  distances <- stringdist::stringdist(screen_name, users_df$screen_name, method = "lv")
+  min_idx <- which.min(distances)
+  if(distances[min_idx] <= 3) {
+    return(users_df$party[min_idx])
+  } else {
+    return(NA_character_)
+  }
+}
+
+alltweets_with_party <- alltweets_with_party %>%
+  rowwise() %>%
+  mutate(
+    party = if_else(
+      is.na(party),
+      fuzzy_fill_party(screen_name, users_with_party),
+      party
+    )
+  ) %>%
+  ungroup()
+na_rows <- alltweets_export %>% filter(is.na(party))
+legislators_flat <- legislators %>%
+  mutate(full_name_lower = str_to_lower(full_name)) %>%
+  select(full_name, full_name_lower, party)
+
+na_rows <- na_rows %>%
+  rowwise() %>%
+  mutate(
+    matched_full_name = {
+      user_name_lower <- str_to_lower(name)
+      matches <- legislators_flat$full_name[legislators_flat$full_name_lower %in% user_name_lower | str_detect(user_name_lower, legislators_flat$full_name_lower)]
+      if(length(matches) > 0) matches[1] else NA_character_
+    },
+    matched_party = {
+      if(!is.na(matched_full_name)){
+        legislators_flat$party[legislators_flat$full_name == matched_full_name]
+      } else NA_character_
+    }
+  ) %>%
+  ungroup()
+
+alltweets_export <- alltweets_export %>%
+  left_join(
+    na_rows %>% select(screen_name, matched_full_name, matched_party),
+    by = "screen_name"
+  ) %>%
+  mutate(
+    full_name = if_else(is.na(full_name), matched_full_name, full_name),
+    party     = if_else(is.na(party), matched_party, party)
+  ) %>%
+  select(-matched_full_name, -matched_party)
+write.csv(alltweets_with_party, 
+          "C:/Users/laylachaaraoui/Downloads/alltweets_with_party.csv", 
+          row.names = FALSE)
+write.csv(alltweets_with_party, 
+          "alltweets_with_party.csv", 
+          row.names = FALSE)
+new_politicians <- data.frame(
+  screen_name = c(
+    "realDonaldTrump","GinaRaimondo","RepJerryNadler","RepScottPerry",
+    "GovMattBevin","RepAndyHarrisMD","RepJoeKennedy","RepLujanGrisham",
+    "dougducey","senrobportman","CAPAC","HispanicCaucus",
+    "CarolynBMaloney","demcloakroom","rubenkihuen","rogerwicker",
+    "repjimmygomez","RepEspaillat","GovAbbott","GovernorBullock",
+    "GovWalkerWI","GovHerbert","GovMaryFallin","GovPhilScott",
+    "GovLarryHogan","GovSandoval","GovRicketts","GovHolcomb",
+    "GovInslee","GovPritzker","GovWhitmer"
+  ),
+  full_name = c(
+    "Donald Trump","Gina Raimondo","Jerrold Nadler","Scott Perry",
+    "Matt Bevin","Andy Harris","Joe Kennedy III","Michelle Lujan Grisham",
+    "Doug Ducey","Rob Portman","Congressional Asian Pacific American Caucus",
+    "Congressional Hispanic Caucus","Carolyn B. Maloney","House Democratic Cloakroom",
+    "Ruben Kihuen","Roger Wicker","Jimmy Gomez","Adriano Espaillat",
+    "Greg Abbott","Steve Bullock","Scott Walker","Gary Herbert","Mary Fallin",
+    "Phil Scott","Larry Hogan","Brian Sandoval","Pete Ricketts","Eric Holcomb",
+    "Jay Inslee","J.B. Pritzker","Gretchen Whitmer"
+  ),
+  party = c(
+    "Republican","Democrat","Democrat","Republican","Republican","Republican",
+    "Democrat","Democrat","Republican","Republican","Democrat/Non-Partisan",
+    "Democrat","Democrat","Democrat","Democrat","Republican","Democrat",
+    "Democrat","Republican","Democrat","Republican","Republican","Republican",
+    "Republican","Republican","Republican","Republican","Republican","Democrat",
+    "Democrat","Democrat"
+  ),
+  stringsAsFactors = FALSE
+)
+
+alltweets_with_party <- alltweets_with_party %>%
+  left_join(new_politicians, by = "screen_name", suffix = c("", "_new")) %>%
+  mutate(
+    full_name = if_else(is.na(full_name), full_name_new, full_name),
+    party     = if_else(is.na(party), party_new, party)
+  ) %>%
+  select(-full_name_new, -party_new)
+sum(is.na(alltweets_with_party_filled$party))
+
+
