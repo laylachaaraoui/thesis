@@ -118,45 +118,81 @@ ggplot(topic_rates,
 
 library(tidyverse)
 
-legislation_trends <- tribble(
+library(tidyverse)
+
+library(tidyverse)
+
+library(tidyverse)
+library(scales)
+
+share_data <- tribble(
   ~year, ~party, ~topic, ~share,
-  2012, "Democrat", "Gun", 0.83,
-  2012, "Republican", "Gun", 0.25,
-  2013, "Democrat", "Gun", 0.78,
-  2013, "Republican", "Gun", 0.33,
-  2016, "Democrat", "Gun", 0.50,
-  2016, "Republican", "Gun", 1.00,
-  2017, "Democrat", "Gun", 0.82,
+  2012, "Democrat", "Gun", 0.50,
+  2012, "Republican", "Gun", 0.17,
+  2013, "Democrat", "Gun", 0.65,
+  2013, "Republican", "Gun", 0.13,
+  2016, "Democrat", "Gun", 0.15,
+  2016, "Republican", "Gun", 0.00,
+  2017, "Democrat", "Gun", 0.50,
   2017, "Republican", "Gun", 0.00,
-  2018, "Democrat", "Gun", 0.53,
+  2018, "Democrat", "Gun", 0.32,
   2018, "Republican", "Gun", 0.00,
 
-  2012, "Democrat", "Mental Health", 0.17,
-  2012, "Republican", "Mental Health", 0.75,
-  2013, "Democrat", "Mental Health", 0.22,
-  2013, "Republican", "Mental Health", 0.67,
-  2016, "Democrat", "Mental Health", 0.50,
-  2016, "Republican", "Mental Health", 0.00,
-  2017, "Democrat", "Mental Health", 0.18,
-  2017, "Republican", "Mental Health", 1.00,
-  2018, "Democrat", "Mental Health", 0.47,
-  2018, "Republican", "Mental Health", 1.00
+  2012, "Democrat", "Mental Health", 0.10,
+  2012, "Republican", "Mental Health", 0.50,
+  2013, "Democrat", "Mental Health", 0.19,
+  2013, "Republican", "Mental Health", 0.25,
+  2016, "Democrat", "Mental Health", 0.15,
+  2016, "Republican", "Mental Health", 0.14,
+  2017, "Democrat", "Mental Health", 0.11,
+  2017, "Republican", "Mental Health", 0.11,
+  2018, "Democrat", "Mental Health", 0.28,
+  2018, "Republican", "Mental Health", 0.57
 )
-ggplot(legislation_trends,
-       aes(x = year, y = share, color = party, group = party)) +
-  geom_line(linewidth = 1.3) +
-  geom_point(size = 3) +
+
+ggplot(share_data, aes(x = factor(year), y = party, fill = share)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = percent(share, accuracy = 1))) +
   facet_wrap(~topic) +
-  scale_color_manual(values = c(
-    "Democrat" = "#a6cee3",
-    "Republican" = "#fb9a99"
-  )) +
-  scale_y_continuous(labels = scales::percent_format()) +
+  scale_fill_gradient(low = "white", high = "steelblue",
+                      labels = percent_format()) +
   labs(
     title = "Policy Emphasis in Congressional Legislation After Mass Shootings",
     x = "Year",
-    y = "Share of Party Legislation",
-    color = "Party"
+    y = "Party",
+    fill = "Share"
   ) +
-  theme_minimal(base_size = 14)
+  theme_minimal()
+
+gun_counts <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat", "Republican")) %>%
+  group_by(year, party_clean) %>%
+  summarise(
+    gun_mentions = sum(gun_topic, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(gun_counts)
+
+mental_counts <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat", "Republican")) %>%
+  group_by(year, party_clean) %>%
+  summarise(
+    mental_mentions = sum(mental_topic, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(mental_counts)
+
+topic_counts <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat", "Republican")) %>%
+  group_by(year, party_clean) %>%
+  summarise(
+    total_tweets = n(),
+    gun_mentions = sum(gun_topic, na.rm = TRUE),
+    mental_mentions = sum(mental_topic, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(topic_counts)
 
