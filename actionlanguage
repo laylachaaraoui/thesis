@@ -1,0 +1,166 @@
+library(dplyr)
+
+party_sentiment_summary <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat", "Republican")) %>%
+  group_by(party_clean) %>%
+  summarise(
+    mean_sentiment = mean(sentiment, na.rm = TRUE),
+    median_sentiment = median(sentiment, na.rm = TRUE),
+    sd_sentiment = sd(sentiment, na.rm = TRUE),
+    n = n()
+  )
+
+party_sentiment_summary
+t.test(
+  sentiment ~ party_clean,
+  data = alltweets_with_party_filled %>%
+    filter(party_clean %in% c("Democrat", "Republican"))
+)
+library(stringr)
+
+action_words <- c(
+  "must",
+  "need to",
+  "take action",
+  "act now",
+  "cannot allow",
+  "complicit",
+  "demand",
+  "debate",
+  "reform",
+  "ban"
+)
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(action_language = str_detect(
+    tolower(text),
+    paste(action_words, collapse = "|")
+  ))
+action_summary <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat", "Republican")) %>%
+  group_by(party_clean) %>%
+  summarise(
+    action_rate = mean(action_language, na.rm = TRUE),
+    n = n()
+  )
+
+action_summary
+prop.test(
+  table(
+    alltweets_with_party_filled$party_clean,
+    alltweets_with_party_filled$action_language
+  )
+)
+
+library(ggplot2)
+library(dplyr)
+avg_sentiment <- alltweets_with_party_filled %>%
+  filter(party_clean %in% c("Democrat", "Republican")) %>% 
+  group_by(party_clean) %>%
+  summarize(mean_sentiment = mean(sentiment, na.rm = TRUE))
+
+ggplot(avg_sentiment, aes(x = party_clean, y = mean_sentiment, fill = party_clean)) +
+  geom_col() +
+  scale_fill_manual(values = c("Democrat" = "#a6cee3", "Republican" = "#fb9a99")) + 
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_text(aes(label = round(mean_sentiment, 3)), vjust = -0.3, size = 5) +
+  labs(
+    title = "Average Sentiment by Party",
+    x = "Party", 
+    y = "Average Sentiment Score",
+    fill = "Party"
+  ) +
+  theme_minimal(base_size = 14)
+
+library(ggplot2)
+library(dplyr)
+parkland_filtered2 <- parkland_filtered2 %>%
+  mutate(sentiment_bin = cut(
+    sentiment,
+    breaks = seq(-1, 1, by = 0.05),
+    include.lowest = TRUE,
+    labels = seq(-0.975, 0.975, by = 0.05)
+  )) %>%
+  mutate(sentiment_bin = as.numeric(as.character(sentiment_bin)))
+parkland_sentiment_bins <- parkland_filtered2 %>%
+  group_by(sentiment_bin) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  mutate(prop = count / sum(count))
+ggplot(parkland_sentiment_bins, aes(x = sentiment_bin, y = prop)) +
+  geom_col(fill = "steelblue") +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = c(-1, 0, 1), limits = c(-1, 1)) +
+  labs(
+    title = "Sentiment Distribution — Parkland Tweets",
+    x = "Sentiment Score",
+    y = "Proportion of Tweets"
+  ) +
+  theme_minimal()
+
+library(ggplot2)
+library(dplyr)
+
+datasets <- list(
+  "Parkland" = parkland_filtered2,
+  "Aurora" = aurora_filtered2,
+  "Orlando" = orlando_filtered2,
+  "Sandy Hook" = sandyhook_filtered,
+  "Vegas" = vegas_filtered2
+)
+colors <- c(
+  "Parkland" = "#1f77b4",
+  "Aurora" = "#ff7f0e",
+  "Orlando" = "#2ca02c",
+  "Sandy Hook" = "#d62728",
+  "Vegas" = "#9467bd"
+)
+plot_sentiment <- function(df, title) {
+  df <- df %>%
+    mutate(sentiment_bin = cut(
+      sentiment,
+      breaks = seq(-1, 1, by = 0.05),
+      include.lowest = TRUE,
+      labels = seq(-0.975, 0.975, by = 0.05)
+    )) %>%
+    mutate(sentiment_bin = as.numeric(as.character(sentiment_bin)))
+  
+  df_summary <- df %>%
+    group_by(sentiment_bin) %>%
+    summarise(count = n(), .groups = "drop") %>%
+    mutate(prop = count / sum(count))
+  
+  ggplot(df_summary, aes(x = sentiment_bin, y = prop)) +
+    geom_col(fill = colors[title]) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_x_continuous(breaks = c(-1, 0, 1), limits = c(-1, 1)) +
+    labs(
+      title = paste("Sentiment Distribution —", title, "Tweets"),
+      x = "Sentiment Score",
+      y = "Proportion of Tweets"
+    ) +
+    theme_minimal()
+}
+plots <- lapply(names(datasets), function(name) {
+  plot_sentiment(datasets[[name]], name)
+})
+plots[[1]]  # Parkland in blue
+plots[[2]]  # Aurora in orange
+plots[[3]]  # Orlando in green
+plots[[4]]  # Sandy Hook in red
+plots[[5]]  # Vegas in purple
+
+library(ggplot2)
+library(scales)
+
+ggplot(action_summary, aes(x = party_clean, y = action_rate)) +
+  geom_col(fill = c("#a6cee3", "#fb9a99")) +
+  geom_text(aes(label = percent(action_rate, accuracy = 1)), 
+            vjust = -0.3, size = 5) + 
+  scale_y_continuous(limits = c(0, max(action_summary$action_rate) * 1.2),
+                     labels = percent_format(accuracy = 1)) +
+  labs(
+    title = "Proportion of Action-Demanding Tweets by Party",
+    x = "Party",
+    y = "Proportion of Action-Demanding Tweets"
+  ) +
+  theme_minimal(base_size = 14)
