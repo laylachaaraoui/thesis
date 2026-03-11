@@ -59,3 +59,71 @@ ggplot(orlando_filtered2, aes(x = sentiment)) +
   labs(title = "Sentiment Distribution — Orlando Tweets",
        x = "Sentiment Score (Negative → Positive)", y = "Number of Tweets") +
   theme_minimal()
+
+library(dplyr)
+alltweets_sentiment <- bind_rows(
+  aurora_sentiment %>% mutate(case_study = "Aurora"),
+  orlando_sentiment %>% mutate(case_study = "Orlando"),
+  parkland_sentiment %>% mutate(case_study = "Parkland"),
+  sandyhook_sentiment %>% mutate(case_study = "Sandy Hook"),
+  vegas_sentiment %>% mutate(case_study = "Vegas")
+)
+alltweets_sentiment <- alltweets_sentiment %>%
+  mutate(sentiment_cat = case_when(
+    ave_sentiment > 0.1  ~ "positive",
+    ave_sentiment < -0.1 ~ "negative",
+    TRUE                  ~ "neutral"
+  ))
+summary_by_case <- alltweets_sentiment %>%
+  group_by(case_study) %>%
+  summarize(
+    mean_sentiment   = mean(ave_sentiment, na.rm = TRUE),
+    median_sentiment = median(ave_sentiment, na.rm = TRUE),
+    sd_sentiment     = sd(ave_sentiment, na.rm = TRUE),
+    n_tweets         = n()
+  )
+print(summary_by_case)
+lm_model <- lm(ave_sentiment ~ case_study, data = alltweets_sentiment)
+summary(lm_model)
+
+alltweets_sentiment$case_study <- relevel(factor(alltweets_sentiment$case_study), ref = "Aurora")
+library(dplyr)
+Summarize sentiment categories
+sentiment_summary <- alltweets_sentiment %>%
+  group_by(case_study, sentiment_cat) %>%
+  summarize(n = n(), .groups = "drop") %>%
+  group_by(case_study) %>%
+  mutate(percent = round(n / sum(n) * 100, 1)) %>%
+  ungroup()
+print(sentiment_summary)
+
+library(dplyr)
+ci95 <- function(x) {
+  n <- sum(!is.na(x))
+  mean_x <- mean(x, na.rm = TRUE)
+  se <- sd(x, na.rm = TRUE) / sqrt(n)
+  lower <- mean_x - 1.96 * se
+  upper <- mean_x + 1.96 * se
+  return(c(lower = lower, upper = upper))
+}
+sentiment_ci_summary <- alltweets_sentiment %>%
+  group_by(case_study) %>%
+  summarize(
+    mean_sentiment = mean(ave_sentiment, na.rm = TRUE),
+    ci_lower = ci95(ave_sentiment)[1],
+    ci_upper = ci95(ave_sentiment)[2],
+    n_tweets = n()
+  )
+print(sentiment_ci_summary)
+
+library(dplyr)
+sampled_tweets <- alltweets %>%
+  filter(ideology %in% c("Neutral", "Right", "Left")) %>%  # keep only relevant ideologies
+  group_by(ideology) %>%
+  slice_sample(n = 3) %>%                                   # randomly select 3 per group
+  ungroup()
+print(sampled_tweets)
+
+write.csv(sampled_tweets, "sampled_tweets_examples.csv", row.names = FALSE)
+
+print(sampled_tweets$text, max = NULL)
