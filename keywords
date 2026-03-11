@@ -1,0 +1,95 @@
+gun_words <- c(
+  "gun",
+  "guns",
+  "gunman",
+  "gunmen",
+  "firearm",
+  "firearms",
+  "weapon",
+  "weapons",
+  "violence",
+  "violent",
+  "gun violence",
+  "mass shooting",
+  "shooting",
+  "shooter",
+  "shooters",
+  "attack",
+  "attacks",
+  "terror",
+  "terrorism",
+  "rifle",
+  "rifles",
+  "pistol",
+  "pistols",
+  "handgun",
+  "handguns",
+  "ar-15",
+  "ak-47",
+  "assault weapon",
+  "assault weapons",
+  "second amendment",
+  "2nd amendment"
+)
+
+mental_health_words <- c(
+  "mental",
+  "mental health",
+  "mental illness",
+  "mental illness crisis",
+  "mental disorder",
+  "mental disorders",
+  "mental instability",
+  "illness",
+  "sick",
+  "sickness",
+  "psych",
+  "psycho",
+  "psychological",
+  "psychiatric",
+  "psychiatry",
+  "psychology",
+  "psychologist",
+  "psychiatrist",
+  "therapy",
+  "therapist",
+  "counseling",
+  "counselor",
+  "treatment",
+  "behavioral health",
+  "behavioral healthcare",
+  "mental healthcare",
+  "mental health services",
+  "mental health care"
+)
+
+sympathy_words <- c(
+  "prayers",
+  "thoughts",
+  "thoughts and prayers",
+  "praying",
+  "victims",
+  "families",
+  "tragic",
+  "tragedy",
+  "heartbroken",
+  "mourning",
+  "condolences",
+  "devastating",
+  "horrific",
+  "senseless",
+  "sad",
+  "grief"
+)
+
+mental_pattern <- paste0("\\b(", paste(mental_health_words, collapse = "|"), ")\\b")
+gun_pattern <- paste0("\\b(", paste(gun_words, collapse = "|"), ")\\b")
+sympathy_pattern <- paste0("\\b(", paste(sympathy_words, collapse = "|"), ")\\b")
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(
+    gun_topic = str_detect(tolower(text), gun_pattern),
+    mental_topic = str_detect(tolower(text), mental_pattern),
+    sympathy_topic = str_detect(tolower(text), sympathy_pattern)
+  )
+
