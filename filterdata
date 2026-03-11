@@ -1,0 +1,272 @@
+library(dplyr)
+library(stringr)
+
+parkland_terms <- c(
+  "parkland",
+  "marjory stoneman",
+  "stoneman douglas",
+  "broward",
+  "nikolas cruz",
+  "mental health",
+  "mental illness",
+  "mental healthcare",
+  "mental health reform",
+  "gun control",
+  "gun reform",
+  "gun safety",
+  "gun violence",
+  "background checks",
+  "assault weapon",
+  "weapon ban",
+  "gun ban",
+  "firearm",
+  "second amendment",
+  "2nd amendment",
+  "mass shooting",
+  "school shooting",
+  "shooting",
+  "violence",
+  "gunman",
+  "victims",
+  "school safety",
+  "public safety",
+  "protect our schools",
+  "thoughts and prayers",
+  "prayers",
+  "heartbroken",
+  "condolences",
+  "tragic",
+  "tragedy",
+  "tragedies",
+  "devastating"
+)
+parkland_filtered2 <- parkland_data %>%
+  filter(
+    str_detect(
+      str_to_lower(text),
+      regex(str_c(parkland_terms, collapse = "|"), ignore_case = TRUE)
+    )
+  )
+nrow(parkland_data)
+nrow(parkland_filtered2)
+View(parkland_filtered2)
+write.csv(parkland_filtered2, "parkland_filtered.csv", row.names = FALSE)
+
+aurora_terms <- c(
+  "aurora",
+  "aurora shooting",
+  "colorado shooting",
+  "aurora colorado",
+  "century 16",
+  "movie theater shooting",
+  "theater shooting",
+  "dark knight shooting",
+  "james holmes",
+  "mental health",
+  "mental illness",
+  "mental healthcare",
+  "mental health reform",
+  "gun control",
+  "gun reform",
+  "gun safety",
+  "gun violence",
+  "background checks",
+  "assault weapon",
+  "weapon ban",
+  "gun ban",
+  "firearm",
+  "second amendment",
+  "2nd amendment",
+  "mass shooting",
+  "shooting",
+  "gun violence",
+  "gunman",
+  "victims",
+  "public safety",
+  "community safety",
+  "protect our communities",
+  "thoughts and prayers",
+  "prayers",
+  "heartbroken",
+  "condolences",
+  "tragic",
+  "tragedy",
+  "tragedies",
+  "devastating"
+)
+aurora_filtered2 <- aurora_data_small %>%
+  filter(
+    str_detect(
+      str_to_lower(text),
+      regex(str_c(aurora_terms, collapse = "|"), ignore_case = TRUE)
+    )
+  )
+nrow(aurora_data_small)
+nrow(aurora_filtered2)
+View(aurora_filtered2)
+write.csv(aurora_filtered2, "aurora_filtered.csv", row.names = FALSE)
+
+sandyhook_terms <- c(
+  "sandy hook",
+  "newtown",
+  "newtown shooting",
+  "sandy hook elementary",
+  "adam lanza",
+  "sandyhook",
+  "mental health",
+  "mental illness",
+  "mental healthcare",
+  "mental health reform",
+  "gun control",
+  "gun reform",
+  "gun safety",
+  "gun violence",
+  "background checks",
+  "assault weapon",
+  "weapon ban",
+  "gun ban",
+  "firearm",
+  "second amendment",
+  "2nd amendment",
+  "mass shooting",
+  "school shooting",
+  "shooting",
+  "gun violence",
+  "gunman",
+  "victims",
+  "school safety",
+  "public safety",
+  "protect our schools",
+  "protect our communities",
+  "thoughts and prayers",
+  "prayers",
+  "heartbroken",
+  "condolences",
+  "tragic",
+  "tragedy",
+  "tragedies",
+  "devastating"
+)
+sandyhook_filtered <- sandyhook_data_small %>%
+  filter(
+    str_detect(
+      str_to_lower(text),
+      regex(str_c(sandyhook_terms, collapse = "|"), ignore_case = TRUE)
+    )
+  )
+nrow(sandyhook_data_small)
+nrow(sandyhook_filtered)
+View(sandyhook_filtered)
+write.csv(sandyhook_filtered, "sandyhook_filtered.csv", row.names = FALSE)
+
+vegas_terms <- c(
+  "las vegas",
+  "mandalay bay",
+  "route 91",
+  "vegas shooting",
+  "nevada shooting",
+  "stephen paddock",
+  "mental health",
+  "mental illness",
+  "mental healthcare",
+  "mental health reform",
+  "gun control",
+  "gun reform",
+  "gun safety",
+  "gun violence",
+  "background checks",
+  "assault weapon",
+  "weapon ban",
+  "gun ban",
+  "firearm",
+  "second amendment",
+  "2nd amendment",
+  "mass shooting",
+  "shooting",
+  "gun violence",
+  "gunman",
+  "victims",
+  "public safety",
+  "community safety",
+  "protect our communities",
+  "protect our schools",
+  "thoughts and prayers",
+  "prayers",
+  "heartbroken",
+  "condolences",
+  "tragic",
+  "tragedy",
+  "tragedies",
+  "devastating"
+)
+vegas_filtered2 <- vegas_data_small %>%
+  filter(
+    str_detect(
+      str_to_lower(text),
+      regex(str_c(vegas_terms, collapse = "|"), ignore_case = TRUE)
+    )
+  )
+nrow(vegas_data_small)      # total tweets in the 30-day period
+nrow(vegas_filtered2)       # tweets relevant to the event
+View(vegas_filtered2)
+write.csv(vegas_filtered2, "vegas_filtered.csv", row.names = FALSE)
+
+orlando_terms <- c(
+  "orlando",
+  "pulse nightclub",
+  "pulse",
+  "orlando shooting",
+  "florida shooting",
+  "omar mateen",
+  "nightclub shooting",
+  "pulse tragedy",
+  "mental health",
+  "mental illness",
+  "mental healthcare",
+  "mental health reform",
+  "gun control",
+  "gun reform",
+  "gun safety",
+  "gun violence",
+  "background checks",
+  "assault weapon",
+  "weapon ban",
+  "gun ban",
+  "firearm",
+  "second amendment",
+  "2nd amendment",
+  "mass shooting",
+  "shooting",
+  "gun violence",
+  "gunman",
+  "victims",
+  "public safety",
+  "community safety",
+  "protect our communities",
+  "protect our schools",
+  "thoughts and prayers",
+  "prayers",
+  "heartbroken",
+  "condolences",
+  "tragic",
+  "tragedy",
+  "tragedies",
+  "devastating"
+)
+orlando_filtered2 <- orlando_data_small %>%
+  filter(
+    str_detect(
+      str_to_lower(text),
+      regex(str_c(orlando_terms, collapse = "|"), ignore_case = TRUE)
+    )
+  )
+nrow(orlando_data_small)      # total tweets in 30-day window
+nrow(orlando_filtered2)       # relevant tweets
+View(orlando_filtered2)
+write.csv(orlando_filtered2, "orlando_filtered.csv", row.names = FALSE)
+
+write.csv(vegas_filtered2, "vegas_filtered.csv", row.names = FALSE)
+write.csv(parkland_filtered2, "parkland_filtered.csv", row.names = FALSE)
+write.csv(aurora_filtered2, "aurora_filtered.csv", row.names = FALSE)
+write.csv(sandyhook_filtered, "sandyhook_filtered.csv", row.names = FALSE)
+write.csv(orlando_filtered2, "orlando_filtered.csv", row.names = FALSE)
