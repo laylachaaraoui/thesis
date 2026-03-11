@@ -108,7 +108,7 @@ chunk_size <- 10000
 chunk_counter <- 0
 repeat {
   lines <- readLines(con, n = chunk_size)
-  if (length(lines) == 0) break  # End of file
+  if (length(lines) == 0) break
   chunk_counter <- chunk_counter + 1
   chunk <- stream_in(textConnection(lines), verbose = FALSE, flatten = TRUE)
   if ("created_at" %in% names(chunk)) {
