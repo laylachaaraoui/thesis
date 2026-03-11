@@ -193,4 +193,17 @@ alltweets_with_party_filled %>%
   select(created_at, case, party_clean, text, YOUR_SENTIMENT_COLUMN) %>%
   head(20)
 
+print(
+  Alltweets_with_party_filled %>%
+    group_by(case) %>%
+    summarise(
+      mean_sentiment = mean(sentiment, na.rm = TRUE),
+      q1 = quantile(sentiment, 0.25, na.rm = TRUE),
+      q3 = quantile(sentiment, 0.75, na.rm = TRUE),
+      iqr = IQR(sentiment, na.rm = TRUE),
+      n = n()
+    ),
+  n = Inf
+)
+as.data.frame(sentiment_summary)
 
