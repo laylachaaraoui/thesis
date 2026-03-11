@@ -118,12 +118,37 @@ print(sentiment_ci_summary)
 
 library(dplyr)
 sampled_tweets <- alltweets %>%
-  filter(ideology %in% c("Neutral", "Right", "Left")) %>%  # keep only relevant ideologies
+  filter(ideology %in% c("Neutral", "Right", "Left")) %>% 
   group_by(ideology) %>%
-  slice_sample(n = 3) %>%                                   # randomly select 3 per group
+  slice_sample(n = 3) %>%                                
   ungroup()
 print(sampled_tweets)
 
 write.csv(sampled_tweets, "sampled_tweets_examples.csv", row.names = FALSE)
+
+options(scipen = 999)
+
+sampled_sentiment <- bind_rows(
+  
+  alltweets_with_party_filled %>%
+    filter(sentiment <= -0.5) %>%
+    slice_sample(n = 3),
+  
+  alltweets_with_party_filled %>%
+    filter(sentiment > -0.5 & sentiment < -0.1) %>%
+    slice_sample(n = 3),
+  
+  alltweets_with_party_filled %>%
+    filter(sentiment >= -0.1 & sentiment <= 0.1) %>%
+    slice_sample(n = 3),
+
+  alltweets_with_party_filled %>%
+    filter(sentiment > 0.1 & sentiment < 0.5) %>%
+    slice_sample(n = 3)
+) %>%
+  arrange(sentiment)
+
+sampled_sentiment %>%
+  select(sentiment, text)
 
 print(sampled_tweets$text, max = NULL)
