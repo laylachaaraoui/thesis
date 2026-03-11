@@ -1,0 +1,105 @@
+library(dplyr)
+library(stringr)
+library(ggplot2)
+library(scales)
+library(tidyr)
+
+left_terms <- c(
+  "assault weapon","assault weapons","assault-style weapon",
+  "assault-style weapons","weapons of war","gun control",
+  "gun violence","end gun violence","prevent gun violence",
+  "gun reform","commonsense gun","common sense gun",
+  "common sense reform","common sense reforms","gun safety",
+  "gun safety law","gun safety laws","background checks",
+  "universal background checks","expanded background checks",
+  "weapon ban","weapons ban","ban assault","ban weapons of war",
+  "firearm reform","firearm restrictions","nra","gun lobby",
+  "gun lobbyists","mass shooting epidemic","federal action on guns",
+  "stronger gun laws","stricter gun laws","close the loophole",
+  "close loopholes","second amendment"
+)
+
+right_terms <- c(
+  "mental health","mental illness","serious mental illness",
+  "law enforcement","back the blue","constitutional right",
+  "constitutional rights","gun rights","protect our rights",
+  "self-defense","self defense","public safety","school safety",
+  "keep our schools safe","secure our schools","terrorism",
+  "domestic terrorism","evil","evil act","evil acts",
+  "criminal","criminals","violent criminal","violent criminals",
+  "law and order","safety and security","enforce existing laws",
+  "enforcing existing laws","prosecute","protect our communities",
+  "protect our children","harden our schools","security failures",
+  "warning signs","failed system","troubled individual",
+  "deranged","dangerous individual","stop politicizing",
+  "do not politicize","not the time for politics","unity",
+  "come together","family values","faith","religious freedom",
+  "responsible gun owners","protect innocent life"
+)
+
+neutral_terms <- c(
+  "thoughts and prayers","prayers","heartbroken","tragic",
+  "tragedy","victims","condolences","mourning","grieving",
+  "sympathy","my heart goes out","devastating","horrific",
+  "senseless","our hearts are with","praying for",
+  "keeping in my prayers","deepest condolences"
+)
+
+alltweets_with_party_filled <- alltweets_with_party_filled %>%
+  mutate(
+    text_lower = str_to_lower(text),
+    left_score = str_count(text_lower, str_c(left_terms, collapse="|")),
+    right_score = str_count(text_lower, str_c(right_terms, collapse="|")),
+    neutral_score = str_count(text_lower, str_c(neutral_terms, collapse="|")),
+    ideology = case_when(
+      left_score > right_score & left_score >= neutral_score & left_score > 0 ~ "Left",
+      right_score > left_score & right_score >= neutral_score & right_score > 0 ~ "Right",
+      neutral_score > 0 ~ "Neutral",
+      TRUE ~ "Neutral"
+    )
+  )
+
+alltweets_with_party_filled$ideology <- factor(
+  alltweets_with_party_filled$ideology,
+  levels = c("Left","Neutral","Right")
+)
+
+ideology_breakdown <- alltweets_with_party_filled %>%
+  group_by(case, ideology) %>%
+  summarise(count = n(), .groups="drop") %>%
+  group_by(case) %>%
+  mutate(
+    proportion = count / sum(count),
+    percent = round(proportion*100,1),
+    percent_label = paste0(percent,"%")
+  ) %>%
+  ungroup()
+
+print(ideology_breakdown)
+
+ideology_table <- ideology_breakdown %>%
+  select(case, ideology, count, percent) %>%
+  pivot_wider(
+    names_from = ideology,
+    values_from = c(count, percent)
+  )
+print(ideology_table)
+
+ideology_breakdown$case <- factor(
+  ideology_breakdown$case,
+  levels = c("Aurora", "Sandy Hook", "Orlando", "Vegas", "Parkland")
+)
+
+ggplot(ideology_breakdown, aes(x = case, y = proportion, fill = ideology)) +
+  geom_col() +
+  geom_text(aes(label = percent_label),
+            position = position_stack(vjust = 0.5),
+            size = 3) +
+  scale_y_continuous(labels = percent_format()) +
+  labs(
+    title = "Ideological Breakdown by Case Study",
+    x = "Case Study",
+    y = "Proportion of Tweets",
+    fill = "Ideology"
+  ) +
+  theme_minimal()
