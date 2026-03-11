@@ -1,0 +1,23 @@
+library(dplyr)
+
+# Combine all case study datasets into one
+alltweets <- bind_rows(
+  orlando_filtered,
+  parkland_filtered,
+  sandyhook_filtered,
+  vegas_filtered,
+  aurora_filtered
+)
+
+# Quick check
+dim(alltweets)
+head(alltweets)
+table(alltweets$party, useNA = "ifany")
+library(dplyr)
+
+alltweets <- alltweets %>%
+  select(-user_id, -time, -link, -screen_clean, -screen_last_guess, -screen_name_clean, -party)
+
+# Quick check
+colnames(alltweets)
+head(alltweets)
