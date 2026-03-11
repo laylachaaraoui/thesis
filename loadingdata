@@ -1,0 +1,147 @@
+library(jsonlite)
+library(dplyr)
+library(readr)
+tweets_file <- "/Users/laylachaaraoui/Downloads/archive-2/tweets.json"
+start_epoch <- 1355443200
+end_epoch   <- 1358121600
+sandy_hook <- data.frame()
+con <- file(tweets_file, "r")
+chunk_size <- 10000
+repeat {
+  lines <- readLines(con, n = chunk_size)
+  if (length(lines) == 0) break
+  chunk <- stream_in(
+    textConnection(lines),
+    verbose = FALSE,
+    flatten = TRUE
+  )
+  if ("created_at" %in% names(chunk)) {
+    chunk$created_at <- as.numeric(chunk$created_at)
+    chunk_filtered <- chunk %>%
+      filter(created_at >= start_epoch &
+             created_at <= end_epoch)
+    chunk_filtered <- chunk_filtered %>%
+      mutate(across(everything(), as.character))
+    sandy_hook <- bind_rows(sandy_hook, chunk_filtered)
+    cat("Tweets collected so far:", nrow(sandy_hook), "\n")
+  }
+}
+close(con)
+cat("Final Sandy Hook tweet count:", nrow(sandy_hook), "\n")
+write_csv(sandy_hook, "sandy_hook_tweets.csv")
+cat("Saved to sandy_hook_tweets.csv\n")
+sandy_hook <- read_csv("sandy_hook_tweets.csv")
+library(dplyr)
+library(readr)
+sandy_hook_clean <- sandy_hook %>%
+sandy_hook_clean <- sandy_hook %>%
+  mutate(
+    created_at = as.POSIXct(
+      as.numeric(created_at),
+      origin = "1970-01-01",
+      tz = "UTC"
+    )
+  ) %>%
+  select(
+    created_at,
+    retweet_count,
+    user_screen_name,
+    text
+  ) %>%
+  rename(
+    screen_name = user_screen_name
+  )
+
+library(jsonlite)
+library(dplyr)
+tweets_file <- "/Users/laylachaaraoui/Downloads/archive-2/tweets.json"
+if (!file.exists(tweets_file)) stop("Tweets file not found!")
+start_epoch <- 1342742400
+end_epoch   <- 1345420800
+aurora <- data.frame()
+con <- file(tweets_file, "r")
+chunk_size <- 10000
+chunk_counter <- 0
+repeat {
+  lines <- readLines(con, n = chunk_size)
+  if (length(lines) == 0) break
+  chunk_counter <- chunk_counter + 1
+  chunk <- stream_in(textConnection(lines), verbose = FALSE, flatten = TRUE)
+  if ("created_at" %in% names(chunk)) {
+    chunk$created_at <- as.numeric(chunk$created_at)
+    chunk_filtered <- chunk %>%
+      filter(created_at >= start_epoch & created_at <= end_epoch) %>%
+      mutate(across(everything(), as.character))
+    aurora <- bind_rows(aurora, chunk_filtered)
+  }
+  cat("Chunk processed:", chunk_counter,
+      " | Tweets collected so far:", nrow(aurora), "\n")
+}
+close(con)
+cat("Finished! Final Aurora tweet count:", nrow(aurora), "\n")
+library(dplyr)
+library(readr)
+aurora_clean <- aurora %>%
+  mutate(
+    created_at = as.POSIXct(
+      as.numeric(created_at),
+      origin = "1970-01-01",
+      tz = "UTC"
+    )
+  ) %>%
+  select(
+    created_at,
+    retweet_count,
+    screen_name,
+    text
+  )
+
+library(jsonlite)
+library(dplyr)
+tweets_file <- "/Users/laylachaaraoui/Downloads/archive-2/tweets.json"
+if (!file.exists(tweets_file)) stop("Tweets file not found!")
+start_epoch <- 1465670400   # 2016-06-12 00:00:00 UTC
+end_epoch   <- 1468281600   # 2016-07-12 00:00:00 UTC
+orlando <- data.frame()
+con <- file(tweets_file, "r")
+chunk_size <- 10000
+chunk_counter <- 0
+repeat {
+  lines <- readLines(con, n = chunk_size)
+  if (length(lines) == 0) break  # End of file
+  chunk_counter <- chunk_counter + 1
+  chunk <- stream_in(textConnection(lines), verbose = FALSE, flatten = TRUE)
+  if ("created_at" %in% names(chunk)) {
+    chunk$created_at <- as.numeric(chunk$created_at)
+    chunk_filtered <- chunk %>%
+      filter(created_at >= start_epoch & created_at <= end_epoch) %>%
+      mutate(across(everything(), as.character))
+    orlando <- bind_rows(orlando, chunk_filtered)
+  cat("Chunk processed:", chunk_counter,
+      " | Tweets collected so far:", nrow(orlando), "\n")
+close(con)
+cat("Finished! Total Orlando tweets collected:", nrow(orlando), "\n")
+
+library(dplyr)
+library(readr)
+orlando_clean <- orlando %>%
+  mutate(
+    created_at = as.POSIXct(
+      as.numeric(created_at),
+      origin = "1970-01-01",
+      tz = "UTC"
+    )
+  ) %>%
+  select(
+    created_at,
+    retweet_count,
+    screen_name,
+    text
+  )
+output_file <- "/Users/laylachaaraoui/Downloads/orlando_clean.csv"
+write_csv(orlando_clean, output_file)
+if (file.exists(output_file)) {
+  cat("orlando_clean.csv successfully saved to Downloads!\n")
+} else {
+  cat("Error: File not found. Check path.\n")
+}
